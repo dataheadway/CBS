@@ -5,6 +5,10 @@ app = Flask(__name__)
 # Verification Token
 VERIFY_TOKEN = "my_secure_token_123"
 
+# Welcome route
+@app.route('/')
+def welcome():
+    return "Welcome to CBS", 200
 
 # Handle webhook verification (GET request)
 @app.route('/webhook', methods=['GET'])
