@@ -79,9 +79,8 @@ def instagram_callback():
                 print(f"Access Token: {ACCESS_TOKEN}, User ID: {user_id}")
                 return "Instagram login successful! Access Token obtained.", 200
             else:
-                print("CLIENT_SECRET:", CLIENT_SECRET)  # Debugging line
                 print(f"Failed to obtain access token: {response_data}")  # Log error details
-                return f"Failed to obtain access token: {response_data}", 400
+                return f"Failed to obtain access token: {response_data} + CLIENT_SECRET", 400
         except Exception as e:
             print(f"An error occurred: {str(e)}")
             return "An error occurred while exchanging code for access token.", 500
