@@ -63,8 +63,8 @@ def instagram_callback():
         payload = {
             'client_id': CLIENT_ID,
             'client_secret': CLIENT_SECRET,
-            'grant_type':'https://cbs-beta.vercel.app/instagram/callback', 
-            'redirect_uri': REDIRECT_URI,
+            'grant_type': 'authorization_code',
+            'redirect_uri': 'https://cbs-beta.vercel.app/instagram/callback',
             'code': code
         }
         
