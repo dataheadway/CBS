@@ -8,8 +8,8 @@ app = Flask(__name__)
 VERIFY_TOKEN = "my_secure_token_123"
 
 # Your Instagram App credentials (use environment variables for security)
-CLIENT_ID =  "556879356850932"
-CLIENT_SECRET =  "72ab719af42d951c16f3270d32ccdc7f"
+CLIENT_ID =  "1195291211766740"
+CLIENT_SECRET =  "846bb5ad2615bc90f0402d76a4b60bec"
 REDIRECT_URI = "https://cbs-beta.vercel.app/instagram/callback"
 GRAPH_API_URL = "https://graph.facebook.com/v17.0"
 ACCESS_TOKEN = None  # Initialize to None
