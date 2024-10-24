@@ -1,17 +1,18 @@
 from flask import Flask, request, jsonify
-import requests 
+import requests
+import os
 
 app = Flask(__name__)
 
 # Verification Token
 VERIFY_TOKEN = "my_secure_token_123"
 
-# Your Instagram App credentials
-CLIENT_ID = "556879356850932"
-CLIENT_SECRET = "a33c58e9c6ddc8e9e5e60080ea4997ea"
-REDIRECT_URI = "https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=1195291211766740&redirect_uri=https://cbs-dataheadways-projects.vercel.app/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish"
+# Your Instagram App credentials (use environment variables for security)
+CLIENT_ID = os.getenv("INSTAGRAM_CLIENT_ID", "556879356850932")
+CLIENT_SECRET = os.getenv("INSTAGRAM_CLIENT_SECRET", "a33c58e9c6ddc8e9e5e60080ea4997ea")
+REDIRECT_URI = "https://cbs-dataheadways-projects.vercel.app/instagram/callback"
 GRAPH_API_URL = "https://graph.facebook.com/v17.0"
-ACCESS_TOKEN = "EAAH6epQZCcvQBOzwsVGXKBqx2kPtERmSBLFShZC2Xo1JpkowcXAmX25tZAZAEJIlxoIZCA2Ndoho7VXFzzQo3SB7RWBZChTmxetk13Bo9CNfBNnQ6WoOmGczyqiu1SZCL2Ln9XbECjZAv6wgw8fdkc3VuUsNs91MNtAxtryblwQEpwsZAVQ6ZCv4YQWWH47XZB6Cv0kN"  # Replace with the obtained access token
+ACCESS_TOKEN = None  # Initialize to None
 
 # Welcome route
 @app.route('/')
@@ -58,7 +59,6 @@ def instagram_callback():
     code = request.args.get('code')
 
     if code:
-        # Exchange the code for an access token
         access_token_url = 'https://api.instagram.com/oauth/access_token'
         payload = {
             'client_id': CLIENT_ID,
@@ -67,17 +67,19 @@ def instagram_callback():
             'redirect_uri': REDIRECT_URI,
             'code': code
         }
-        
+
         try:
             response = requests.post(access_token_url, data=payload)
             response_data = response.json()
-            
+
             if 'access_token' in response_data:
-                access_token = response_data['access_token']
+                global ACCESS_TOKEN  # Declare ACCESS_TOKEN as global
+                ACCESS_TOKEN = response_data['access_token']
                 user_id = response_data['user_id']
-                print(f"Access Token: {access_token}, User ID: {user_id}")
+                print(f"Access Token: {ACCESS_TOKEN}, User ID: {user_id}")
                 return "Instagram login successful! Access Token obtained.", 200
             else:
+                print(f"Failed to obtain access token: {response_data}")  # Log error details
                 return f"Failed to obtain access token: {response_data}", 400
         except Exception as e:
             print(f"An error occurred: {str(e)}")
