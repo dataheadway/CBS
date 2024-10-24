@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, redirect
-import requests # type: ignore
+import requests 
 
 app = Flask(__name__)
 
@@ -10,6 +10,8 @@ VERIFY_TOKEN = "my_secure_token_123"
 CLIENT_ID = "556879356850932"
 CLIENT_SECRET = "a33c58e9c6ddc8e9e5e60080ea4997ea"
 REDIRECT_URI = "https://cbs-beta.vercel.app/webhook"
+GRAPH_API_URL = "https://graph.facebook.com/v17.0"
+ACCESS_TOKEN = "YOUR_PAGE_ACCESS_TOKEN"  # Replace with the obtained access token
 
 # Welcome route
 @app.route('/')
@@ -36,8 +38,17 @@ def handle_webhook():
     data = request.get_json()
 
     if data['object'] == 'instagram':
-        print('Received Instagram event:', data)
-        # Process the event here
+        for entry in data.get('entry', []):
+            for messaging in entry.get('messaging', []):
+                if 'message' in messaging:
+                    sender_id = messaging['sender']['id']
+                    message_text = messaging['message'].get('text', '')
+
+                    # Log the incoming message
+                    print(f'Received message from {sender_id}: {message_text}')
+
+                    # Example: Send an automated response back
+                    send_instagram_message(sender_id, "Thank you for your message!")
 
     return "EVENT RECEIVED", 200
 
@@ -72,6 +83,37 @@ def instagram_callback():
             return f"An error occurred: {str(e)}", 500
     else:
         return "Authorization code not provided", 400
+
+def send_instagram_message(recipient_id, message_text):
+    """
+    Sends a message to a user on Instagram using the Instagram Graph API.
+    """
+    url = f"{GRAPH_API_URL}/me/messages"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "recipient": {
+            "id": recipient_id
+        },
+        "message": {
+            "text": message_text
+        },
+        "messaging_type": "RESPONSE"
+    }
+    params = {
+        "access_token": ACCESS_TOKEN
+    }
+
+    try:
+        response = requests.post(url, json=payload, params=params, headers=headers)
+        response_data = response.json()
+        if response.status_code == 200:
+            print(f"Message sent successfully: {response_data}")
+        else:
+            print(f"Failed to send message: {response_data}")
+    except Exception as e:
+        print(f"An error occurred while sending message: {str(e)}")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
