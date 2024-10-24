@@ -11,7 +11,7 @@ CLIENT_ID = "556879356850932"
 CLIENT_SECRET = "a33c58e9c6ddc8e9e5e60080ea4997ea"
 REDIRECT_URI = "https://cbs-beta.vercel.app/webhook"
 GRAPH_API_URL = "https://graph.facebook.com/v17.0"
-ACCESS_TOKEN = "YOUR_PAGE_ACCESS_TOKEN"  # Replace with the obtained access token
+ACCESS_TOKEN = "EAAH6epQZCcvQBOzwsVGXKBqx2kPtERmSBLFShZC2Xo1JpkowcXAmX25tZAZAEJIlxoIZCA2Ndoho7VXFzzQo3SB7RWBZChTmxetk13Bo9CNfBNnQ6WoOmGczyqiu1SZCL2Ln9XbECjZAv6wgw8fdkc3VuUsNs91MNtAxtryblwQEpwsZAVQ6ZCv4YQWWH47XZB6Cv0kN"  # Replace with the obtained access token
 
 # Welcome route
 @app.route('/')
