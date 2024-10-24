@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect
+from flask import Flask, request, jsonify
 import requests 
 
 app = Flask(__name__)
@@ -37,7 +37,7 @@ def verify_webhook():
 def handle_webhook():
     data = request.get_json()
 
-    if data['object'] == 'instagram':
+    if data and data.get('object') == 'instagram':
         for entry in data.get('entry', []):
             for messaging in entry.get('messaging', []):
                 if 'message' in messaging:
@@ -80,7 +80,8 @@ def instagram_callback():
             else:
                 return f"Failed to obtain access token: {response_data}", 400
         except Exception as e:
-            return f"An error occurred: {str(e)}", 500
+            print(f"An error occurred: {str(e)}")
+            return "An error occurred while exchanging code for access token.", 500
     else:
         return "Authorization code not provided", 400
 
